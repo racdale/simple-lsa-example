@@ -9,11 +9,8 @@ install.packages('audio')
 norm_vec = function(x) sqrt(sum(x^2))
 removepunct = function(x) { return(gsub("[[:punct:]]","",x)) }
 
-tts_ITRI(output,destfile=destfile)
-w = load.wave(destfile)
-play(w)
-
 play_audio = function(output,destfile) {
+  library(Rtts)
   tts_ITRI(output,destfile=destfile)
   w = load.wave(destfile)
   play(w)
