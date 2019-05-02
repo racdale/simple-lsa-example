@@ -37,8 +37,8 @@ get_texts = function(urls,speak_output=F,destfile='/Users/rickdale/temp.wav') {
   return(texts)
 }
 
-build_term_doc_matrix = function(raw_text,speak_output=F) {
-  print('Building the term-by-document matrix. Might have to wait a minute or two. Get comfy.')
+build_term_doc_matrix = function(raw_text,speak_output=F,destfile='/Users/rickdale/temp.wav') {
+  output = 'Building the term-by-document matrix. Might have to wait a minute or two. Get comfy.'
   unique_words = sort(unique(unlist(strsplit(gsub('\n',' ',raw_text),' ')))) # let's get unique word list
   nr = length(unique_words) # how many words are in that set?
   
@@ -63,37 +63,57 @@ build_term_doc_matrix = function(raw_text,speak_output=F) {
   term.X.doc=term.X.doc[rowSums(term.X.doc)>2,]
   term.X.doc=log(term.X.doc+1)
   term.X.doc=term.X.doc[rowSums(term.X.doc)>0,]
-  print('Matrix done. It is now stored in the variable you set to the left of the equal sign.')
+  output = 'Matrix done. It is now stored in the variable you set to the left of the equal sign.'
   return(term.X.doc)
 }
 
-build_lsa_model = function(txd,ndims=20,speak_output=F) {
-  print('Now we run SVD to juice the data matrix into informative dimensions. Here we go. Again, might take a minute depending on the amount of text you processed.')
+build_lsa_model = function(txd,ndims=20,speak_output=F,destfile='/Users/rickdale/temp.wav') {
+  output = 'Now we run SVD to juice the data matrix into informative dimensions. Here we go. Again, might take a minute depending on the amount of text you processed.'
   svd_sol = svd(txd)
   row.names(svd_sol$u) = row.names(txd)
-  print('Done! The LSA model is now stored in the variable you set.')
+  output = 'Done! The LSA model is now stored in the variable you set.'
   return(svd_sol$u[,1:ndims])
 }
 
-cosine_compare = function(lsa_model,word_1,word_2,speak_output=F) {
+cosine_compare = function(lsa_model,word_1,word_2,speak_output=F,destfile='/Users/rickdale/temp.wav') {
   words = row.names(lsa_model)
   if (!(word_1 %in% words)) {
-    return(paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse=''))
+    output = paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse='')
+    if (speak_output) {
+      play_audio(output)
+    }
+    return(output)
   }
   if (!(word_2 %in% words)) {
-    return(paste0('Sorry, the word ',word_2,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse=''))
+    output = paste0('Sorry, the word ',word_2,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse='')
+    if (speak_output) {
+      play_audio(output)
+    }
+    return(output)
   }
   word_1_v = lsa_model[which(words==word_1),]
   word_2_v = lsa_model[which(words==word_2),]
   cos_val = (word_1_v %*% word_2_v)/(norm_vec(word_1_v)*(norm_vec(word_2_v)))
-  return(paste('The cosine between words',word_1,'and',word_2,'is',round(cos_val,2)))
+  output = paste('The cosine between words',word_1,'and',word_2,'is',round(cos_val,2))
+  if (speak_output) {
+    play_audio(output)
+  }
+  return(output)
 }
 
-closest_words = function(lsa_model,word_1,speak_output=F) {
-  print('Computing... this might take a hot minute...')
+closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickdale/temp.wav') {
+  output = 'Computing... this might take a hot minute...'
+  if (speak_output) {
+    play_audio(output)
+  }
+  print(output)
   words = row.names(lsa_model)
   if (!(word_1 %in% words)) {
-    return(paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse=''))
+    output = paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse='')
+    if (speak_output) {
+      play_audio(output)
+    }
+    return(output)    
   }
   word_1_v = lsa_model[which(words==word_1),]
   cos_vals = c()
@@ -103,10 +123,18 @@ closest_words = function(lsa_model,word_1,speak_output=F) {
     cos_val = (word_1_v %*% word_2_v)/(norm_vec(word_1_v)*(norm_vec(word_2_v)))
     cos_vals = c(cos_vals,cos_val)
   }
-  print(paste('Below are the closest words in meaning to',word_1))
+  output = paste('Below are the closest words in meaning to',word_1)
+  if (speak_output) {
+    play_audio(output)
+  }
+  print(output)  
   ixes = sort(cos_vals,decreasing=T,index=T)$ix
   for (i in 1:10) {
-    print(paste(words[ixes[i]],'with a cosine of',round(cos_vals[ixes[i]],2)))
+    output = paste(words[ixes[i]],'with a cosine of',round(cos_vals[ixes[i]],2))
+    if (speak_output) {
+      play_audio(output)
+    }
+    print(output)    
   }
 }
 
