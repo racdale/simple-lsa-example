@@ -84,7 +84,7 @@ build_lsa_model = function(txd,ndims=20,speak_output=F,destfile='/Users/rickdale
     play_audio(output,destfile)
   }
   print(output)  
-  svd_sol = svd(txd)
+  svd_sol = svd(scale(txd))
   row.names(svd_sol$u) = row.names(txd)
   output = 'Done! The LSA model is now stored in the variable you set.'
   if (speak_output) {
