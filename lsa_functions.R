@@ -11,7 +11,7 @@ removepunct = function(x) { return(gsub("[[:punct:]]","",x)) }
 
 play_audio = function(output,destfile) {
   library(Rtts)
-  tts_ITRI(output,destfile=destfile,speaker="Brian")
+  tts_ITRI(output,destfile=destfile,speaker="Bruce")
   w = load.wave(destfile)
   play(w)
 }
