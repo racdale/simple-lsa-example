@@ -73,7 +73,7 @@ closest_words(lsa_model,'car')
 Line 6 will compare two words directly... in the appendix below I offer a few other examples. You can plugin whatever words you might be interested in.
 
 ```r
-cosine_compare('automobile','car')
+cosine_compare(lsa_model,'automobile','car')
 ```
 
 ## Appendix: Extra lines of code to try
