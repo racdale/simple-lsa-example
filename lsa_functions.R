@@ -123,7 +123,7 @@ cosine_compare = function(lsa_model,word_1,word_2,speak_output=F,destfile='/User
   output = paste('The cosine between words',word_1,'and',word_2,'is',round(cos_val,2))
   return(output)
   if (speak_output) {
-    output = paste('The cosine between words',word_1,'and',word_2,'is point',as.english(round(cos_val,2)))
+    output = paste('The cosine between words',word_1,'and',word_2,'is point',as.english(100*round(cos_val,2)))
     play_audio(output,destfile)
   }
 }
@@ -160,10 +160,10 @@ closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickda
   print(output)  
   ixes = sort(cos_vals,decreasing=T,index=T)$ix
   for (i in 1:10) {
-    output = paste(words[ixes[i]],'with a cosine of',round(cos_vals[ixes[i]],2))
+    output = paste(words[ixes[i]],'with a cosine of',round(100*cos_vals[ixes[i]],2))
     print(output)    
     if (speak_output) {
-      output = paste(words[ixes[i]],'with a cosine of point',as.english(round(cos_vals[ixes[i]],2)))
+      output = paste(words[ixes[i]],'with a cosine of point',as.english(100*round(cos_vals[ixes[i]],2)))
       library(english)
       play_audio(output,destfile)
     } 
