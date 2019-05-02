@@ -6,6 +6,7 @@
 install.packages('htm2txt')
 install.packages('Rtts')
 install.packages('audio')
+install.packages('english')
 norm_vec = function(x) sqrt(sum(x^2))
 removepunct = function(x) { return(gsub("[[:punct:]]","",x)) }
 
@@ -34,7 +35,7 @@ get_texts = function(urls,speak_output=F,destfile='/Users/rickdale/temp.wav') {
   }
   output = 'Done! Raw text now stored in your variable, left of the equal sign.'
   if (speak_output) {
-    wait(3)
+    wait(6)
     play_audio(output,destfile)
   }
   print(output)
@@ -73,7 +74,7 @@ build_term_doc_matrix = function(raw_text,speak_output=F,destfile='/Users/rickda
   term.X.doc=term.X.doc[rowSums(term.X.doc)>0,]
   output = 'Matrix done. It is now stored in the variable you set to the left of the equal sign.'
   if (speak_output) {
-    wait(3)
+    wait(30)
     play_audio(output,destfile)
   }
   print(output)  
@@ -90,6 +91,7 @@ build_lsa_model = function(txd,ndims=20,speak_output=F,destfile='/Users/rickdale
   row.names(svd_sol$u) = row.names(txd)
   output = 'Done! The LSA model is now stored in the variable you set.'
   if (speak_output) {
+    wait(60)
     play_audio(output,destfile)
   }
   print(output)  
@@ -116,10 +118,11 @@ cosine_compare = function(lsa_model,word_1,word_2,speak_output=F,destfile='/User
   word_2_v = lsa_model[which(words==word_2),]
   cos_val = (word_1_v %*% word_2_v)/(norm_vec(word_1_v)*(norm_vec(word_2_v)))
   output = paste('The cosine between words',word_1,'and',word_2,'is',round(cos_val,2))
+  return(output)
   if (speak_output) {
+    output = paste('The cosine between words',word_1,'and',word_2,'is point',as.english(round(cos_val,2)))
     play_audio(output,destfile)
   }
-  return(output)
 }
 
 closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickdale/temp.wav') {
@@ -132,7 +135,7 @@ closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickda
   if (!(word_1 %in% words)) {
     output = paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse='')
     if (speak_output) {
-      wait(4)
+      wait(10)
       play_audio(output,destfile)
     }
     return(output)    
@@ -147,17 +150,19 @@ closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickda
   }
   output = paste('Below are the closest words in meaning to',word_1)
   if (speak_output) {
-    wait(3)
+    wait(10)
     play_audio(output,destfile)
   }
   print(output)  
   ixes = sort(cos_vals,decreasing=T,index=T)$ix
   for (i in 1:10) {
     output = paste(words[ixes[i]],'with a cosine of',round(cos_vals[ixes[i]],2))
-    if (speak_output) {
-      play_audio(output,destfile)
-    }
     print(output)    
+    if (speak_output) {
+      output = paste(words[ixes[i]],'with a cosine of point',as.english(round(cos_vals[ixes[i]],2)))
+      library(english)
+      play_audio(output,destfile)
+    } 
   }
 }
 

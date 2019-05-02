@@ -9,4 +9,4 @@ lsa_model = build_lsa_model(term_by_doc_matrix,speak_output=T,destfile="C:\temp.
 5
 closest_words(lsa_model,'car',speak_output=T,destfile="C:\temp.wav")
 6
-cosine_compare('automobile','car',speak_output=T,destfile="C:\temp.wav")
+cosine_compare(lsa_model,'automobile','car',speak_output=T,destfile="C:\temp.wav")
