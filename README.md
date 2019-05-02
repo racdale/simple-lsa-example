@@ -93,9 +93,9 @@ term_by_doc_matrix[101,]
 Example comparisons of other pairs of words:
 
 ```r
-cosine_compare('cortex','car')
-cosine_compare('shannon','communication')
-cosine_compare('shannon','brains')
+cosine_compare(lsa_model,'cortex','car')
+cosine_compare(lsa_model,'shannon','communication')
+cosine_compare(lsa_model,'shannon','brains')
 ```
 
 
