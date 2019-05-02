@@ -34,6 +34,7 @@ get_texts = function(urls,speak_output=F,destfile='/Users/rickdale/temp.wav') {
   }
   output = 'Done! Raw text now stored in your variable, left of the equal sign.'
   if (speak_output) {
+    wait(3)
     play_audio(output,destfile)
   }
   print(output)
@@ -72,6 +73,7 @@ build_term_doc_matrix = function(raw_text,speak_output=F,destfile='/Users/rickda
   term.X.doc=term.X.doc[rowSums(term.X.doc)>0,]
   output = 'Matrix done. It is now stored in the variable you set to the left of the equal sign.'
   if (speak_output) {
+    wait(3)
     play_audio(output,destfile)
   }
   print(output)  
@@ -130,6 +132,7 @@ closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickda
   if (!(word_1 %in% words)) {
     output = paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse='')
     if (speak_output) {
+      wait(4)
       play_audio(output,destfile)
     }
     return(output)    
@@ -144,6 +147,7 @@ closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickda
   }
   output = paste('Below are the closest words in meaning to',word_1)
   if (speak_output) {
+    wait(3)
     play_audio(output,destfile)
   }
   print(output)  
