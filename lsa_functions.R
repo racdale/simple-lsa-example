@@ -5,12 +5,21 @@
 
 install.packages('htm2txt')
 install.packages('Rtts')
+install.packages('audio')
+library(audio)
+library(Rtts)
+library(htm2txt)
 norm_vec = function(x) sqrt(sum(x^2))
 removepunct = function(x) { return(gsub("[[:punct:]]","",x)) }
 
-get_texts = function(urls) {
-  print('Downloading texts. This can take a minute.')
-  library(htm2txt)
+get_texts = function(urls,speak_output=F,destfile='/Users/rickdale/temp.wav') {
+  output = 'Downloading texts. This can take a minute.'
+  print(output)
+  if (speak_output) {
+    tts_ITRI(output,destfile=destfile)
+    w = load.wave(destfile)
+    play(w)
+  }
   texts = c()
   for (i in 1:length(urls)) {
     this_text = tolower(gettxt(urls[i]))
@@ -18,11 +27,17 @@ get_texts = function(urls) {
     #this_text = iconv(this_text, from = 'UTF-8', to = 'ASCII//TRANSLIT')
     texts = c(texts,removepunct(this_text))
   }
-  print('Done! Raw text now stored in your variable.')
+  output = 'Done! Raw text now stored in your variable.'
+  if (speak_output) {
+    tts_ITRI(output,destfile=destfile)
+    w = load.wave(destfile)
+    play(w)
+  }
+  print(output)
   return(texts)
 }
 
-build_term_doc_matrix = function(raw_text) {
+build_term_doc_matrix = function(raw_text,speak_output=F) {
   print('Building the term-by-document matrix. Might have to wait a minute or two. Get comfy.')
   unique_words = sort(unique(unlist(strsplit(gsub('\n',' ',raw_text),' ')))) # let's get unique word list
   nr = length(unique_words) # how many words are in that set?
@@ -52,7 +67,7 @@ build_term_doc_matrix = function(raw_text) {
   return(term.X.doc)
 }
 
-build_lsa_model = function(txd,ndims=20) {
+build_lsa_model = function(txd,ndims=20,speak_output=F) {
   print('Now we run SVD to juice the data matrix into informative dimensions. Here we go. Again, might take a minute depending on the amount of text you processed.')
   svd_sol = svd(txd)
   row.names(svd_sol$u) = row.names(txd)
@@ -60,7 +75,7 @@ build_lsa_model = function(txd,ndims=20) {
   return(svd_sol$u[,1:ndims])
 }
 
-cosine_compare = function(lsa_model,word_1,word_2) {
+cosine_compare = function(lsa_model,word_1,word_2,speak_output=F) {
   words = row.names(lsa_model)
   if (!(word_1 %in% words)) {
     return(paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse=''))
@@ -74,7 +89,7 @@ cosine_compare = function(lsa_model,word_1,word_2) {
   return(paste('The cosine between words',word_1,'and',word_2,'is',round(cos_val,2)))
 }
 
-closest_words = function(lsa_model,word_1) {
+closest_words = function(lsa_model,word_1,speak_output=F) {
   print('Computing... this might take a hot minute...')
   words = row.names(lsa_model)
   if (!(word_1 %in% words)) {
