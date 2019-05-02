@@ -6,13 +6,13 @@
 install.packages('htm2txt')
 install.packages('Rtts')
 install.packages('audio')
-library(audio)
-library(Rtts)
-library(htm2txt)
 norm_vec = function(x) sqrt(sum(x^2))
 removepunct = function(x) { return(gsub("[[:punct:]]","",x)) }
 
 get_texts = function(urls,speak_output=F,destfile='/Users/rickdale/temp.wav') {
+  library(audio)
+  library(Rtts)
+  library(htm2txt)
   output = 'Downloading texts. This can take a minute.'
   print(output)
   if (speak_output) {
@@ -27,7 +27,7 @@ get_texts = function(urls,speak_output=F,destfile='/Users/rickdale/temp.wav') {
     #this_text = iconv(this_text, from = 'UTF-8', to = 'ASCII//TRANSLIT')
     texts = c(texts,removepunct(this_text))
   }
-  output = 'Done! Raw text now stored in your variable.'
+  output = 'Done! Raw text now stored in your variable, left of the equal sign.'
   if (speak_output) {
     tts_ITRI(output,destfile=destfile)
     w = load.wave(destfile)
@@ -58,12 +58,12 @@ build_term_doc_matrix = function(raw_text,speak_output=F) {
     term.X.doc[as.numeric(names(counts)),i] = counts
   }
   row.names(term.X.doc) = unique_words
-  colnames(term.X.doc) = paste("doc",1:nc)
-  term.X.doc = term.X.doc[nchar(row.names(txd))>2,]
+  colnames(term.X.doc) = paste("paragraph",1:nc)
+  term.X.doc = term.X.doc[nchar(row.names(term.X.doc))>2,]
   term.X.doc=term.X.doc[rowSums(term.X.doc)>2,]
   term.X.doc=log(term.X.doc+1)
   term.X.doc=term.X.doc[rowSums(term.X.doc)>0,]
-  print('Matrix done. Stored in the variable you set.')
+  print('Matrix done. It is now stored in the variable you set to the left of the equal sign.')
   return(term.X.doc)
 }
 
