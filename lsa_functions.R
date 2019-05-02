@@ -43,9 +43,10 @@ get_texts = function(urls,speak_output=F,destfile='/Users/rickdale/temp.wav') {
 }
 
 build_term_doc_matrix = function(raw_text,speak_output=F,destfile='/Users/rickdale/temp.wav') {
-  output = 'Building the term-by-document matrix. Might have to wait a minute or two. Get comfy.'
+  output = 'Building the term-by-document matrix. Might have to wait a minute or two.'
   if (speak_output) {
     play_audio(output,destfile)
+    wait(10)
   }
   print(output)  
   unique_words = sort(unique(unlist(strsplit(gsub('\n',' ',raw_text),' ')))) # let's get unique word list
@@ -82,16 +83,17 @@ build_term_doc_matrix = function(raw_text,speak_output=F,destfile='/Users/rickda
 }
 
 build_lsa_model = function(txd,ndims=20,speak_output=F,destfile='/Users/rickdale/temp.wav') {
-  output = 'Now we run SVD to juice the data matrix into informative dimensions. Here we go. Again, might take a minute depending on the amount of text you processed.'
+  output = 'Now we run SVD to squeeze the data matrix into informative dimensions. Might take a minute.'
   if (speak_output) {
     play_audio(output,destfile)
+    wait(10)
   }
   print(output)  
   svd_sol = svd(scale(txd))
   row.names(svd_sol$u) = row.names(txd)
   output = 'Done! The LSA model is now stored in the variable you set.'
   if (speak_output) {
-    wait(60)
+    wait(10)
     play_audio(output,destfile)
   }
   print(output)  
@@ -99,6 +101,7 @@ build_lsa_model = function(txd,ndims=20,speak_output=F,destfile='/Users/rickdale
 }
 
 cosine_compare = function(lsa_model,word_1,word_2,speak_output=F,destfile='/Users/rickdale/temp.wav') {
+  library(english)
   words = row.names(lsa_model)
   if (!(word_1 %in% words)) {
     output = paste0('Sorry, the word ',word_1,' is not in the texts. This may be because it did not occur frequently enough to include in the model. Words have to be present at least 2 or more times in a single text from the data you entered.',collapse='')
@@ -126,6 +129,7 @@ cosine_compare = function(lsa_model,word_1,word_2,speak_output=F,destfile='/User
 }
 
 closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickdale/temp.wav') {
+  library(english)
   output = 'Computing... this might take a hot minute...'
   if (speak_output) {
     play_audio(output,destfile)
