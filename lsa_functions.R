@@ -130,7 +130,7 @@ cosine_compare = function(lsa_model,word_1,word_2,speak_output=F,destfile='/User
 
 closest_words = function(lsa_model,word_1,speak_output=F,destfile='/Users/rickdale/temp.wav') {
   library(english)
-  output = 'Computing... this might take a hot minute...'
+  output = 'Computing... this might take a minute...'
   if (speak_output) {
     play_audio(output,destfile)
   }
