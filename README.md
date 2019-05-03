@@ -24,6 +24,8 @@ Line 1 to run in RStudio's command console:
 source('https://raw.githubusercontent.com/racdale/simple-lsa-example/master/lsa_functions.R')
 ```
 
+Note: You only have to run this line once each time you use R/RStudio. Once you run line #1, you can use and reuse the lines below as many times as you like to experiment with semantic models.
+
 ## Next, let's get some texts
 
 In this step, we are going to "scrape" three websites to build an LSA model. These are the Wikipedia entries for "Brain," "Car," and "Communication." We are only using 3 websites, and I noted in class that LSA can uses thousands or millions of texts. We are simplifying things a bit, building a simpler model that can run easily on our personal computers. I have also added a little twist -- this line of code uses *paragraphs* from the Wikipedia websites as definitions of "documents." That means we'll get hundreds of documents from these large Wikipedia websites, rather than just 3. 
@@ -78,6 +80,13 @@ cosine_compare(lsa_model,'automobile','car')
 
 ## Appendix: Extra lines of code to try
 
+In our class, I described how the semantic model "compresses" the large data into a semantic model (the LSA model) that gives us our new word vectors that have the relationships we desire. The function above (line 4) compresses it into 20 dimensions. The `dim` function gives us the dimensions of our matrices. The first line below shows us the row-by-column size of our data matrix. The next line shows us the row-by-column size of the LSA model. They should have the same number of rows (words), but distinct column counts.
+
+```r
+dim(term_by_doc_matrix)
+dim(lsa_model)
+```
+
 What's in the word-by-document matrix? Let's take a look at the first 10 words:
 
 ```r
@@ -90,7 +99,13 @@ What do the counts look like, over paragraphs? Let's look at the 101st word's ra
 term_by_doc_matrix[101,]
 ```
 
-Example comparisons of other pairs of words:
+And how about our model itself? Let's look at that same word, but now over our 20 new dimensions.
+
+```r
+lsa_model[101,]
+```
+
+Example comparisons of other pairs of words using the model I defined above in line 4:
 
 ```r
 cosine_compare(lsa_model,'cortex','car')
