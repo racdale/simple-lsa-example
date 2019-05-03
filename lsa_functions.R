@@ -3,13 +3,14 @@
 # date: spring, 2019
 #
 
-install.packages('htm2txt')
-install.packages('Rtts')
-install.packages('audio')
-install.packages('english')
-norm_vec = function(x) sqrt(sum(x^2))
-removepunct = function(x) { return(gsub("[[:punct:]]","",x)) }
+install.packages('htm2txt') # scraping text content
+install.packages('Rtts') # text to speech
+install.packages('audio') # playing wave files for accessibility
+install.packages('english') # converting numbers to words
+norm_vec = function(x) sqrt(sum(x^2)) # for cosine
+removepunct = function(x) { return(gsub("[[:punct:]]","",x)) } # removing punctuation from text
 
+# for accessibility options of playing output audio... work in progress
 play_audio = function(output,destfile) {
   library(Rtts)
   tts_ITRI(output,destfile=destfile,speaker="Bruce")
